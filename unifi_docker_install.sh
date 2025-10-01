@@ -48,14 +48,14 @@ ready
 echo "configuring networks..."
 ID=$(sudo docker network ls | awk '$2 == "unifi_default" {print $1}')
 
-if ! ip route show table lan_routable | grep -q '172.16.1.0'; then
-    sudo ip route add 172.16.1.0/24 dev br-$ID table lan_routable
+if ! ip route show table lan_routable | grep -q '172.28.0.240'; then
+    sudo ip route add 172.28.0.240/28 dev br-$ID table lan_routable
     else 
     echo -e "LAN route is already in place.\n"
 fi
 
-if ! ip route show table wan_routable | grep -q '172.16.1.0'; then
-    sudo ip route add 172.16.1.0/24 dev br-$ID table wan_routable
+if ! ip route show table wan_routable | grep -q '172.28.0.240'; then
+    sudo ip route add 172.28.0.240/28 dev br-$ID table wan_routable
 else 
     echo -e "WAN route is already in place.\n"
 fi
@@ -66,7 +66,7 @@ dns_settings=/home/pi/.firewalla/config/dnsmasq_local/unifi
 sudo touch $dns_settings
 sudo chown pi $dns_settings
 sudo chmod a+rw $dns_settings
-echo address=/unifi/172.16.1.2 > $dns_settings
+echo address=/unifi/172.28.0.242 > $dns_settings
 echo -e "\n✅ unifi network settings saved."
 sleep 10
 sudo systemctl restart firerouter_dns
@@ -92,15 +92,15 @@ echo -e  "#!/bin/bash
         sudo systemctl start docker
         sudo systemctl start docker-compose@unifi
         sudo ipset create -! docker_lan_routable_net_set hash:net
-        sudo ipset add -! docker_lan_routable_net_set 172.16.1.0/24
+        sudo ipset add -! docker_lan_routable_net_set 172.28.0.240/28
         sudo ipset create -! docker_wan_routable_net_set hash:net
-        sudo ipset add -! docker_wan_routable_net_set 172.16.1.0/24" >  $path3/start_unifi.sh
+        sudo ipset add -! docker_wan_routable_net_set 172.28.0.240/28" >  $path3/start_unifi.sh
 
 [ -f /etc/update-motd.d/00-header ] && series=$(/etc/update-motd.d/00-header | grep "Welcome to" | sed -e "s|Welcome to ||g" -e "s|FIREWALLA ||g" -e "s|\s[0-9].*$||g") || series=""
 
 if [[ "$series" == *"gold-se"* ]] && ! grep -q "MASQUERADE" "$path3/start_unifi.sh"; then
 	echo "Adding Gold SE networking..."
-	echo -e "sudo iptables -t nat -A POSTROUTING -s 172.16.1.0/16 -o eth0 -j MASQUERADE" >>  $path3/start_unifi.sh
+	echo -e "sudo iptables -t nat -A POSTROUTING -s 172.2801.0/24 -o eth0 -j MASQUERADE" >>  $path3/start_unifi.sh
 fi
 
 chmod a+x $path3/start_unifi.sh
@@ -116,5 +116,5 @@ echo -e "\nStarting the container, please wait....\n"
 
 ready
 
-echo -e "Done!\n\nYou can open https://172.16.1.2:8443 in your favorite browser and set up your UniFi Controller. \n\nNote it may not have a certificate so the browser may give you a security warning.\n\nAlso note the container may take a minute to be accessible as the web server starts. Give it a minute or two and refresh your browser.\n\n"
+echo -e "Done!\n\nYou can open https://172.28.0.242:8443 in your favorite browser and set up your UniFi Controller. \n\nNote it may not have a certificate so the browser may give you a security warning.\n\nAlso note the container may take a minute to be accessible as the web server starts. Give it a minute or two and refresh your browser.\n\n"
 echo -e "\n\n To update the unifi docker container in the future, run\n/home/pi/.firewalla/run/docker/updatedocker.sh unifi\n\n"
