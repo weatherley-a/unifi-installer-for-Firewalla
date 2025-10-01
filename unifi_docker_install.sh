@@ -100,7 +100,7 @@ echo -e  "#!/bin/bash
 
 if [[ "$series" == *"gold-se"* ]] && ! grep -q "MASQUERADE" "$path3/start_unifi.sh"; then
 	echo "Adding Gold SE networking..."
-	echo -e "sudo iptables -t nat -A POSTROUTING -s 172.2801.0/24 -o eth0 -j MASQUERADE" >>  $path3/start_unifi.sh
+	echo -e "sudo iptables -t nat -A POSTROUTING -s 172.28.0.0/24 -o eth0 -j MASQUERADE" >>  $path3/start_unifi.sh
 fi
 
 chmod a+x $path3/start_unifi.sh
