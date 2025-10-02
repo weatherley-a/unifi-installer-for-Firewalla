@@ -22,7 +22,7 @@ if [ ! -d "$path2" ]; then
 
 fi
 
-curl -s https://raw.githubusercontent.com/mbierman/unifi-installer/main/docker-compose.yaml > $path2/docker-compose.yaml
+curl -s https://raw.githubusercontent.com/weatherley-a/unifi-installer/main/docker-compose.yaml > $path2/docker-compose.yaml
 sudo chown pi $path2/docker-compose.yaml
 sudo chmod +rw $path2/docker-compose.yaml
 echo -e "\n✅ unifi yaml created."
@@ -78,7 +78,7 @@ update=/home/pi/.firewalla/run/docker/updatedocker.sh
 touch $update
 sudo chown pi $update
 sudo chmod a+xrw $update
-curl -s https://gist.githubusercontent.com/mbierman/6cf22430ca0c2ddb699ac8780ef281ef/raw/b2790767203e4ee49a250f46047a07c6d7a8a79b/updatedocker.sh > $update
+curl -s https://gist.githubusercontent.com/weatherley-a/6cf22430ca0c2ddb699ac8780ef281ef/raw/b2790767203e4ee49a250f46047a07c6d7a8a79b/updatedocker.sh > $update
 
 
 path3=/home/pi/.firewalla/config/post_main.d
